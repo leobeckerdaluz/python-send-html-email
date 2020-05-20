@@ -178,6 +178,10 @@ def send_message_to_google(message, sender):
     from google.auth.transport.requests import Request
 
     SCOPES = 'https://www.googleapis.com/auth/gmail.send'
+    # SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+    # SCOPES = ['https://mail.google.com']
+    # SCOPES = 'https://mail.google.com/'
+    # SCOPES = [@"https://mail.google.com/"]
 
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -217,7 +221,7 @@ def main():
     ap.add_argument("sender", help="email from")
     ap.add_argument("to_csv", help="comma separated list of emails to send to")
     ap.add_argument("subject", help="email subject line")
-    ap.add_argument("name", help="name of person receiving email")
+    ap.add_argument("body", help="email body")
     ap.add_argument("smtp", help="SMTP server")
     ap.add_argument("--port", type=int, default=25, help="SMTP port")
     ap.add_argument("-t", "--tls", help="use TLS", action="store_true")
@@ -230,7 +234,7 @@ def main():
     sender = args.sender
     to_csv = args.to_csv
     subject = args.subject
-    name = args.name
+    msg_html = args.body
     smtp_server = args.smtp
     smtp_port = args.port
     use_tls = args.tls
@@ -238,31 +242,8 @@ def main():
     smtp_password = args.password
     debug = args.debug
     attachment_file_list = args.attach
-
-    # HTML message, would use mako templating in real scenario
-    msg_html = """
-    <html>
-    <head><style type="text/css">
-    .attribution {{ color: #aaaaaa; font-size: 8pt }}
-    .greeting {{ font-size: 14pt; font-styweight: bold}}
-    </style></head>
-    <body>
-    <img src="https://fabianlee.org/wp-content/uploads/2019/10/header-scale-models.png"/><br/>
-    <span class="greeting">Hello, {}!</span>
-    <p>As our valued customer, we would like to invite you to our annual sale!</p>
-
-    <span><img src="https://fabianlee.org/wp-content/uploads/2019/10/footer-scale-models.png"/></span>
-    <p class="attribution">
-    <a href="https://www.freevector.com/isometric-transportation-clip-art-set-in-thick-lines-30738#">
-    Image by FreeVector.com
-    </a></p>
-    </body></html>
-    """.format(name)
-
-    # text message, would use mako templating in real scenario
-    msg_plain = ("Hello {}:\n\n" +
-                 " As our valued customer, we would like to invite you to our annual sale!").format(name)
-
+    msg_plain = ""
+    
     # create message object
     message = create_message_with_attachment(sender, to_csv, subject, msg_html, msg_plain, attachment_file_list)
     if debug:
