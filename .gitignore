@@ -1,6 +1,3 @@
 .vscode/
 credentials.json
 *.pickle
-
-quickstart_API.py
-send_html_emailt.py
