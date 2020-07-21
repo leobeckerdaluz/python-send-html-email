@@ -91,6 +91,7 @@ def create_message_with_attachment(sender, to, subject, msg_html, msg_plain, att
     print("From: {}".format(sender))
     print("To: {}".format(to))
     print("Subject: {}".format(subject))
+    print("Message: {}".format(msg_html))
 
     # text and html versions of message
     message_alt = MIMEMultipart('alternative')
@@ -241,6 +242,13 @@ def main():
     message = create_message_with_attachment(sender, to_csv, subject, msg_html, msg_plain, attachment_file_list)
     if debug:
         print(message)
+
+    # Confirm sending message
+    choise = input("Confirm sending e-mail? (Y | N): ")
+    choise = choise.lower()
+    if (choise != 'y'):
+        print("E-mail não enviado.")
+        exit(-1)
 
     # send message
     if smtp_server == "google.com":
